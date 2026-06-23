@@ -12,9 +12,16 @@ import { Figur } from "../engine/figur";
  */
 export class Objektbank {
   private aktiv: Figur | null = null;
+  /** Bekannte Klassen (von außen gesetzt); Default deckt den Start ab. */
+  private klassen: { name: string; instanziierbar: boolean }[] = [
+    { name: "Figur", instanziierbar: true },
+    { name: "Welt", instanziierbar: false },
+  ];
 
   /** Wird aufgerufen, wenn der Quelltext einer Klasse geöffnet werden soll. */
   onKlasseOeffnen: ((anzeige: string) => void) | null = null;
+  /** Wird aufgerufen, wenn eine neue Klasse angelegt werden soll. */
+  onNeueKlasse: (() => void) | null = null;
 
   constructor(
     private readonly welt: Welt,
@@ -28,6 +35,12 @@ export class Objektbank {
     this.zeichneMethoden();
   }
 
+  /** Aktualisiert die Klassenliste (z. B. nach „neue Klasse"). */
+  setzeKlassen(klassen: { name: string; instanziierbar: boolean }[]): void {
+    this.klassen = klassen;
+    this.zeichneKlassen();
+  }
+
   waehleAktiv(f: Figur | null): void {
     this.aktiv = f;
     this.zeichneObjekte();
@@ -37,23 +50,31 @@ export class Objektbank {
   private zeichneKlassen(): void {
     this.klassenEl.innerHTML = "";
 
-    // Klasse Figur: Objekte erzeugen UND Quelltext ansehen/ändern.
-    const [figurKarte, figurAktionen] = this.klassenKarte("Figur");
-    const neu = document.createElement("button");
-    neu.textContent = "neue Figur";
-    neu.onclick = () => {
-      const id = this.welt.erzeugeFigur("Figur");
-      this.welt.waehle(id);
-      this.aktiv = this.welt.alleFiguren().find((f) => f.id === id) ?? null;
-      this.zeichneObjekte();
-      this.zeichneMethoden();
-    };
-    figurAktionen.prepend(neu);
-    this.klassenEl.appendChild(figurKarte);
+    for (const k of this.klassen) {
+      const [karte, aktionen] = this.klassenKarte(k.name);
+      if (k.instanziierbar) {
+        const neu = document.createElement("button");
+        neu.textContent = `neue ${k.name}`;
+        neu.onclick = () => this.erzeugeObjekt(k.name);
+        aktionen.prepend(neu);
+      }
+      this.klassenEl.appendChild(karte);
+    }
 
-    // Klasse Welt: existiert bereits als Bühne – hier nur Quelltext ansehen.
-    const [weltKarte] = this.klassenKarte("Welt");
-    this.klassenEl.appendChild(weltKarte);
+    const neueKlasse = document.createElement("button");
+    neueKlasse.className = "sekundaer neue-klasse";
+    neueKlasse.textContent = "＋ neue Klasse";
+    neueKlasse.onclick = () => this.onNeueKlasse?.();
+    this.klassenEl.appendChild(neueKlasse);
+  }
+
+  /** Erzeugt ein Objekt der Klasse `klasse` und wählt es aus. */
+  private erzeugeObjekt(klasse: string): void {
+    const id = this.welt.erzeugeFigur(klasse, undefined, undefined, klasse);
+    this.welt.waehle(id);
+    this.aktiv = this.welt.alleFiguren().find((f) => f.id === id) ?? null;
+    this.zeichneObjekte();
+    this.zeichneMethoden();
   }
 
   /** Baut eine Klassenkarte mit Namen und „Quelltext"-Knopf; gibt Karte + Aktionsleiste zurück. */
@@ -82,7 +103,7 @@ export class Objektbank {
       el.className = "objekt" + (f === this.aktiv ? " aktiv" : "");
       el.innerHTML = `<span class="punkt" style="background:${f.farbe}"></span>
         <span class="objekt-name">${f.name}</span>
-        <span class="objekt-typ">: Figur</span>`;
+        <span class="objekt-typ">: ${f.typ}</span>`;
       el.onclick = () => {
         this.welt.waehle(f.id);
         this.waehleAktiv(f);

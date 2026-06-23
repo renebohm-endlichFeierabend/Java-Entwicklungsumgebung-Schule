@@ -149,7 +149,7 @@ export class CheerpJLaufzeit implements JavaLaufzeit {
 
   private umhuelle(rumpf: string, paket: string, klasse: string): string {
     return `package ${paket};
-import de.schule.jle.Figur;
+import de.schule.jle.*;
 
 public class ${klasse} {
   public void start() {

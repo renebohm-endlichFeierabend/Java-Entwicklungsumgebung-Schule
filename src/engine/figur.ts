@@ -12,6 +12,8 @@ export class Figur {
   readonly id: number;
   name: string;
   farbe: string;
+  /** Anzeigename der Klasse, z. B. "Figur", "Auto", "Roboter". */
+  typ = "Figur";
 
   // Ist-Zustand (gerendert)
   x: number;

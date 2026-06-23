@@ -30,6 +30,11 @@ Funktioniert ohne Internet und auf dem iPad.
 - **Klassen-Quelltext** (Fenster unten rechts, optional): Quelltext von `Figur`
   und `Welt` ansehen/ändern. Die Bewegung (`geheVor`) ist jetzt echter,
   lesbarer Java-Code (Trigonometrie) statt einer Black Box.
+- **Eigene bewegliche Klassen** („＋ neue Klasse", z. B. `Auto`, `Roboter`):
+  Sie `extends Figur` und **erben** die Bewegung – die Mathematik steht nur
+  EINMAL in `Figur`. Schüler:innen arbeiten in ihrer kleinen eigenen Klasse,
+  ohne die Bewegung anfassen (oder kaputtmachen) zu müssen. **„Zurücksetzen"**
+  stellt jede Klasse wieder auf den Ursprungsstand her.
 - Sauberer Build (`npm run build`) und Framework-Jar (`npm run build:framework`).
 
 ## Was noch zu validieren ist (CheerpJ-Pfad)

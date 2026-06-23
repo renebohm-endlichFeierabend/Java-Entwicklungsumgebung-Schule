@@ -21,6 +21,13 @@ const objektbank = new Objektbank(
 );
 eingabe.onAuswahl = (f) => objektbank.waehleAktiv(f);
 
+// --- Konsole -------------------------------------------------------------
+const konsole = $("konsole");
+const log = (z: string) => {
+  konsole.textContent += z + "\n";
+  konsole.scrollTop = konsole.scrollHeight;
+};
+
 // --- Klassen-Quelltext (Fenster unten rechts, optional) ------------------
 const klassencodeBox = $("klassencode-box");
 const klassencodeAn = $<HTMLInputElement>("klassencode-an");
@@ -28,24 +35,31 @@ const klassenEditor = new KlassenEditor(
   klassencodeBox,
   $("klassen-tabs"),
   $<HTMLTextAreaElement>("klassen-code"),
+  $("klassen-aktionen"),
   (sichtbar) => {
     klassencodeAn.checked = sichtbar;
   },
 );
+// Objektbank und Editor synchron halten (Klassen kommen hinzu/fallen weg).
+const synchronisiereKlassen = () =>
+  objektbank.setzeKlassen(klassenEditor.klassenListe());
+klassenEditor.onAenderung = synchronisiereKlassen;
+synchronisiereKlassen();
+
 // Klick auf „Quelltext" in der Objektbank öffnet das Fenster für die Klasse.
 objektbank.onKlasseOeffnen = (anzeige) => klassenEditor.oeffne(anzeige);
+// „＋ neue Klasse": Namen erfragen und eine bewegliche Klasse anlegen.
+objektbank.onNeueKlasse = () => {
+  const name = prompt("Name der neuen Klasse (z. B. Auto, Roboter):", "Auto");
+  if (name === null) return;
+  if (klassenEditor.neueKlasse(name) === null)
+    log("Ungültiger oder bereits vergebener Klassenname.");
+};
 // Kopfzeilen-Schalter zum optionalen Ein-/Ausblenden des Fensters.
 klassencodeAn.addEventListener("change", () =>
   klassenEditor.zeige(klassencodeAn.checked),
 );
 $("klassencode-zu").addEventListener("click", () => klassenEditor.zeige(false));
-
-// --- Konsole -------------------------------------------------------------
-const konsole = $("konsole");
-const log = (z: string) => {
-  konsole.textContent += z + "\n";
-  konsole.scrollTop = konsole.scrollHeight;
-};
 
 // --- Laufzeit (Mock ⇄ CheerpJ) ------------------------------------------
 let laufzeit: JavaLaufzeit = new MockLaufzeit();

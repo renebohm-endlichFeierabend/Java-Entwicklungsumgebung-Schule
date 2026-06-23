@@ -34,10 +34,17 @@ export class Welt {
 
   // ---- API: identisch für Maus-Interaktion und Java-Code -----------------
 
-  erzeugeFigur(name: string, x = this.breite / 2, y = this.hoehe / 2): number {
+  erzeugeFigur(
+    name: string,
+    x = this.breite / 2,
+    y = this.hoehe / 2,
+    typ = "Figur",
+  ): number {
     const id = this.naechsteId++;
     const farbe = FARBEN[(id - 1) % FARBEN.length];
-    this.figuren.set(id, new Figur(id, name || `Figur${id}`, x, y, farbe));
+    const figur = new Figur(id, name || `Figur${id}`, x, y, farbe);
+    figur.typ = typ;
+    this.figuren.set(id, figur);
     this.onAenderung?.();
     return id;
   }
