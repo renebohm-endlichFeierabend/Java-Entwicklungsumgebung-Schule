@@ -1,11 +1,13 @@
 name: Deploy auf GitHub Pages
 
+# Die KI-Werkstatt ist bewusst buildfrei (reines HTML/CSS/JS, damit sie auch
+# lokal per Doppelklick funktioniert) — deshalb wird das Repo unverändert
+# als Pages-Artefakt hochgeladen.
+
 on:
   push:
     branches:
-      - claude/java-visual-learning-env-rq8enz
-      - claude/java-dev-environment-setup-31kxg4
-      - claude/cheerpl-character-editor-i1awd2
+      - claude/school-ai-project-ideas-7sby8p
       # Wenn der Stand auf den Hauptbranch gemergt wird, hier ergaenzen:
       # - main
   workflow_dispatch:
@@ -21,26 +23,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Station 1 · LLM zum Anfassen — KI-Werkstatt</title>
+  <link rel="stylesheet" href="../../assets/werkstatt.css">
+</head>
+<body>
+<div class="umschlag">
+  <header class="kopf">
+    <p class="zurueck"><a href="../../index.html">← zurück zur Werkstatt</a></p>
+    <h1>Station 1 · LLM zum Anfassen</h1>
+    <p class="untertitel">Was tut ChatGPT eigentlich? Erst zerlegen wir Text so, wie ein
+      Sprachmodell ihn sieht — dann würfeln wir selbst das nächste Wort.</p>
+    <div id="kompetenzleiste"></div>
+  </header>
+
+  <h2>Teil A — Die KI liest keine Wörter, sondern Tokens</h2>
+  <div class="karte">
+    <p>Sprachmodelle zerlegen Text in <strong>Tokens</strong>: häufige Wörter bleiben ganz,
+      seltene werden in Bruchstücke geteilt. Tippe eigenen Text und beobachte die Zerlegung —
+      probiere kurze häufige Wörter („der Hund“) gegen lange seltene
+      („Donaudampfschifffahrt“).</p>
+    <textarea id="tokenEingabe" rows="3">Der kleine Drache besucht die Schulweihnachtsfeier.</textarea>
+    <div class="tokenband" id="tokenband"></div>
+    <p class="hinweis" id="tokenstatistik"></p>
+    <p class="hinweis">Hinweis: Dies ist ein vereinfachter Demonstrations-Tokenizer mit kleinem
+      Wortschatz. Echte Modelle nutzen dasselbe Prinzip mit ca. 50.000–200.000 Tokens.</p>
+  </div>
+
+  <h2>Teil B — Das nächste Wort ist ein Würfelwurf</h2>
+  <div class="karte">
+    <p>Dieses Mini-Sprachmodell hat einen kleinen Übungstext „gelesen“ und dabei nur eines
+      gelernt: <em>Welches Wort folgt wie oft auf welche Wortfolge?</em> Genau so — nur mit
+      Milliarden Texten — arbeiten große Sprachmodelle.</p>
+
+    <div class="ausgabetext" id="ausgabetext"></div>
+
+    <div class="knopfleiste">
+      <button class="primaer" id="knopfWahrscheinlichstes">Wahrscheinlichstes Wort ➕</button>
+      <button id="knopfWuerfeln">🎲 Würfeln</button>
+      <button id="knopfAuto">🎲 10 Wörter automatisch</button>
+      <button id="knopfNeustart">↺ Neu starten</button>
+    </div>
+
+    <div class="knopfleiste">
+      <label class="regler">Temperatur
+        <input type="range" id="temperatur" min="0.2" max="2" step="0.1" value="1">
+        <output id="temperaturWert">1,0</output>
+      </label>
+      <span class="hinweis">niedrig = vorsichtig &amp; vorhersagbar · hoch = mutig &amp; chaotisch</span>
+    </div>
+
+    <p id="kontextanzeige" class="hinweis"></p>
+    <div class="balkenliste" id="balkenliste"></div>
+
+    <details>
+      <summary>📖 Was hat das Modell gelesen? (Übungstext anzeigen)</summary>
+      <pre id="korpusanzeige" style="white-space: pre-wrap; font-size: 0.9rem;"></pre>
+      <p class="hinweis">Eigener Startsatz:
+        <input type="text" id="startEingabe" placeholder="z. B.: Die Schülerinnen und">
+        <button id="knopfStart">Übernehmen</button>
+      </p>
+    </details>
+  </div>
+
+  <div class="karte didaktik">
+    <h2>🧑‍🏫 Für Lehrkräfte: Einsatz im Unterricht</h2>
+    <p><strong>Zeitbedarf:</strong> 20–45 min · <strong>Stufe:</strong> ab Klasse 8, auch Fortbildung ·
+      <strong>Sozialform:</strong> Partnerarbeit am Gerät, Auswertung im Plenum</p>
+    <p><strong>Leitfragen:</strong></p>
+    <ul>
+      <li>Warum schlägt das Modell nach „Es war einmal“ so sicher „ein/eine“ vor? (→ Häufigkeit im Übungstext prüfen!)</li>
+      <li>Was passiert bei hoher Temperatur — und wann ist „mutig“ nützlich, wann gefährlich?</li>
+      <li>„Weiß“ das Modell, was ein Drache ist? Woher kommen dann sinnvolle Sätze?</li>
+      <li>Übertrag: Wenn ChatGPT nur Wahrscheinlichkeiten würfelt — warum klingt es trotzdem
+        überzeugend, und warum sind <em>Halluzinationen</em> damit unvermeidbar?</li>
+    </ul>
+    <p><strong>Kernbotschaft:</strong> Ein Sprachmodell kennt keine Wahrheit, sondern nur
+      Wahrscheinlichkeiten aus seinen Trainingsdaten. Überzeugender Klang ist kein Beleg für
+      Korrektheit — deshalb bleibt die Prüfung der Ausgabe immer Aufgabe des Menschen.</p>
+  </div>
+
+  <footer class="fuss">KI-Werkstatt · Station 1 · läuft vollständig lokal im Browser</footer>
+</div>
+
+<script src="../../assets/kompetenzen.js"></script>
+<script src="../../assets/ngram.js"></script>
+<script src="../../assets/korpus.js"></script>
+<script src="station.js"></script>
+</body>
+</html>
