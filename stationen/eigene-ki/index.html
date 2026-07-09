@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Station 2 · Baue deine eigene KI — KI-Werkstatt</title>
+  <link rel="stylesheet" href="../../assets/werkstatt.css">
+</head>
+<body>
+<div class="umschlag">
+  <header class="kopf">
+    <p class="zurueck"><a href="../../index.html">← zurück zur Werkstatt</a></p>
+    <h1>Station 2 · Baue deine eigene KI</h1>
+    <p class="untertitel">Trainiere einen Textgenerator mit eigenen Texten, schau ihm ins
+      Gedächtnis — und finde heraus, warum mehr Daten bessere „KI“ ergeben.</p>
+    <div id="kompetenzleiste"></div>
+  </header>
+
+  <h2>Schritt 1 — Trainingsdaten sammeln</h2>
+  <div class="karte">
+    <p>Je mehr Text, desto besser. Füge eigene Texte ein: Märchen, Songtexte,
+      eure Klassenchat-Sprache, die Schulordnung … <strong>Der Stil der Daten wird der Stil
+      deiner KI.</strong></p>
+    <textarea id="trainingstext" rows="10">Es war einmal ein kleiner Roboter, der unbedingt zur Schule gehen wollte.
+Der kleine Roboter stand jeden Morgen früh auf und putzte seine Schrauben.
+Die Kinder in der Schule mochten den kleinen Roboter sehr.
+Der Roboter lernte rechnen, lesen und sogar ein bisschen träumen.
+Eines Tages fragte die Lehrerin: Was möchtest du später werden?
+Ich möchte ein Mensch werden, sagte der kleine Roboter leise.
+Die Kinder lachten nicht. Sie sagten: Du bist doch schon unser Freund.
+Und der kleine Roboter strahlte heller als je zuvor.</textarea>
+    <div class="knopfleiste">
+      <label class="regler">Kontextlänge (Ordnung)
+        <select id="ordnung">
+          <option value="1">1 Wort ansehen</option>
+          <option value="2" selected>2 Wörter ansehen</option>
+          <option value="3">3 Wörter ansehen</option>
+        </select>
+      </label>
+      <button class="primaer" id="knopfTrainieren">🧠 Trainieren!</button>
+    </div>
+    <div class="statistik" id="statistik" hidden>
+      <div><span class="zahl" id="statTokens">–</span><span class="label">Wörter gelesen</span></div>
+      <div><span class="zahl" id="statKontexte">–</span><span class="label">Kontexte gelernt</span></div>
+      <div><span class="zahl" id="statWoerter">–</span><span class="label">verschiedene Wörter</span></div>
+    </div>
+  </div>
+
+  <div id="nachTraining" hidden>
+    <h2>Schritt 2 — Ins Gedächtnis schauen</h2>
+    <div class="karte">
+      <p>Deine „KI“ ist nur diese Tabelle: <em>Nach diesen Wörtern kam im Training … </em>
+        Hier die gelernten Kontexte mit den meisten Fortsetzungen:</p>
+      <table class="gedaechtnis">
+        <thead><tr><th>Kontext (die letzten Wörter)</th><th>mögliche Fortsetzungen (Anzahl)</th></tr></thead>
+        <tbody id="gedaechtnisKoerper"></tbody>
+      </table>
+      <p class="hinweis">Keine Magie, keine Bedeutung — nur Zählen. Große Sprachmodelle ersetzen
+        die Tabelle durch ein neuronales Netz, das Milliarden solcher Muster verdichtet.</p>
+    </div>
+
+    <h2>Schritt 3 — Texte erzeugen</h2>
+    <div class="karte">
+      <div class="ausgabetext" id="ausgabetext"></div>
+      <div class="knopfleiste">
+        <button class="primaer" id="knopfSchreiben">✍️ 30 Wörter schreiben</button>
+        <button id="knopfWeiter">➕ 1 Wort</button>
+        <button id="knopfNeu">↺ Neuer Anfang</button>
+        <label class="regler">Temperatur
+          <input type="range" id="temperatur" min="0.2" max="2" step="0.1" value="1">
+          <output id="temperaturWert">1,0</output>
+        </label>
+      </div>
+      <p class="hinweis" id="erzeugHinweis"></p>
+    </div>
+
+    <h2>Schritt 4 — Experimentieren</h2>
+    <div class="karte">
+      <ul>
+        <li><strong>Datenmenge:</strong> Halbiere den Trainingstext — was passiert? Verdopple ihn (anderen Text dazu) — was ändert sich?</li>
+        <li><strong>Kontextlänge:</strong> Ordnung 1 vs. 3 — wann wird der Text kreativer, wann nur kopiert?</li>
+        <li><strong>Stil-Experiment:</strong> Trainiere mit zwei völlig verschiedenen Texten gemischt (Märchen + Nachrichten). Erkennst du beide Stile wieder?</li>
+        <li><strong>Bias-Vorgeschmack:</strong> Kommt in deinen Daten „der Arzt“ nur männlich vor? Dann „glaubt“ das auch deine KI. Woher kommen wohl die Schieflagen großer Modelle?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="karte didaktik">
+    <h2>🧑‍🏫 Für Lehrkräfte: Einsatz im Unterricht</h2>
+    <p><strong>Zeitbedarf:</strong> 45–90 min · <strong>Stufe:</strong> ab Klasse 9, auch Fortbildung ·
+      <strong>Sozialform:</strong> Partnerarbeit, dann Galerie-Rundgang der erzeugten Texte</p>
+    <p><strong>Leitfragen:</strong></p>
+    <ul>
+      <li>Warum erzeugt das Modell nie Wörter, die nicht in den Trainingsdaten vorkommen — und was heißt das für „Kreativität“ von KI?</li>
+      <li>Ab welcher Kontextlänge plagiiert das Modell nur noch? (Übertrag: Urheberrecht und Trainingsdaten)</li>
+      <li>Wer entscheidet, welche Texte eine KI liest — und was folgt daraus? (→ Station 3: Trainingsdaten &amp; Bias)</li>
+    </ul>
+    <p><strong>Kernbotschaft:</strong> „KI trainieren“ heißt: Muster aus Daten zählen bzw.
+      verdichten. Die Qualität, der Stil und die Schieflagen der Daten landen direkt im Modell —
+      wer KI beurteilen will, muss auf die Daten schauen.</p>
+  </div>
+
+  <footer class="fuss">KI-Werkstatt · Station 2 · deine Trainingstexte verlassen den Browser nicht</footer>
+</div>
+
+<script src="../../assets/kompetenzen.js"></script>
+<script src="../../assets/ngram.js"></script>
+<script src="station.js"></script>
+</body>
+</html>

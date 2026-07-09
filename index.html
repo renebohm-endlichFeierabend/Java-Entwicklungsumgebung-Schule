@@ -1,80 +1,138 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>JavaWelt – visuelle Lernumgebung</title>
-    <link rel="stylesheet" href="/src/ui/styles.css" />
-  </head>
-  <body>
-    <div id="app">
-      <header>
-        <h1>JavaWelt</h1>
-        <span class="untertitel">visuelle Lernumgebung für Java · Prototyp</span>
-        <div class="rechts">
-          <label class="schalter">
-            <input type="checkbox" id="klassencode-an" />
-            Klassen-Quelltext
-          </label>
-          <label class="schalter">
-            <input type="checkbox" id="cheerpj" />
-            echtes Java (CheerpJ)
-          </label>
-          <span id="status">Mock-Laufzeit</span>
-        </div>
-      </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KI-Werkstatt — Lernstationen für Schule und Fortbildung</title>
+  <link rel="stylesheet" href="assets/werkstatt.css">
+</head>
+<body>
+<div class="umschlag">
+  <header class="kopf">
+    <h1>🛠️ KI-Werkstatt</h1>
+    <p class="untertitel">Interaktive Lernstationen zu künstlicher Intelligenz — für den Unterricht
+      und für Lehrkräfte-Fortbildungen. Läuft vollständig im Browser: keine Anmeldung,
+      keine Daten verlassen das Gerät.</p>
+  </header>
 
-      <main>
-        <div class="box" id="buehne">
-          <h2>Welt</h2>
-          <canvas id="canvas" width="720" height="480"></canvas>
-          <div class="werkzeuge">
-            <button id="platzieren" class="sekundaer">Platzieren: aus</button>
-            <button id="leeren" class="sekundaer">Welt leeren</button>
-            <span class="leer">Figur antippen zum Auswählen · ziehen zum Bewegen</span>
-          </div>
-        </div>
+  <div class="karte">
+    <strong>💾 Offline nutzbar:</strong> Dieses Repository herunterladen (oder klonen) und die
+    <code>index.html</code> per Doppelklick öffnen — die Werkstatt funktioniert ohne Internet,
+    ohne Installation und ohne Server, auch im Schulnetz und auf dem iPad.
+  </div>
 
-        <div class="box" id="objektbank-box">
-          <h2>Klassen</h2>
-          <div id="klassen"></div>
-          <h2 style="margin-top: 10px">Objekte</h2>
-          <div id="objekte"></div>
-          <h2 style="margin-top: 10px">Methoden aufrufen</h2>
-          <div id="methoden"></div>
-        </div>
+  <h2>Stationen</h2>
+  <ul class="stationen" id="stationsliste"></ul>
 
-        <div class="box" id="editor-box">
-          <h2>Spielcode</h2>
-          <textarea id="editor" spellcheck="false">
-Figur bello = new Figur("Bello");
-bello.sage("Hallo Welt!");
-bello.geheVor(160);
-bello.dreheDich(90);
-bello.geheVor(120);</textarea
-          >
-          <div class="werkzeuge">
-            <button id="ausfuehren">▶ Ausführen</button>
-          </div>
-          <h2 style="margin-top: 10px">Konsole</h2>
-          <div id="konsole"></div>
-        </div>
+  <h2>Kompetenzbezug</h2>
+  <p>Jede Station trägt Etiketten der Kompetenzcluster <strong>K1–K8</strong> (kräftig = Hauptziel,
+    blass = wird mitbedient). Die Cluster verdichten die Anforderungen der
+    KMK-Handlungsempfehlung KI (2024), des UNESCO AI Competency Framework for Students (2024)
+    und des EU-OECD AILit Framework (2026) — Herleitung siehe
+    <a href="KOMPETENZRAHMEN-KI.md">KOMPETENZRAHMEN-KI.md</a>.</p>
+  <div class="karte" id="kompetenzlegende"></div>
 
-        <div class="box" id="klassencode-box" hidden>
-          <div class="box-kopf">
-            <h2>Klassen-Quelltext</h2>
-            <button id="klassencode-zu" class="sekundaer mini" title="schließen">✕</button>
-          </div>
-          <div id="klassen-tabs" class="tabs"></div>
-          <textarea id="klassen-code" spellcheck="false"></textarea>
-          <p class="leer">
-            Tipp: Hier kannst du den Quelltext der Klassen ansehen und ändern.
-            Mit „echtes Java (CheerpJ)" werden die Änderungen beim Ausführen
-            mitkompiliert.
-          </p>
-        </div>
-      </main>
-    </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <footer class="fuss">
+    KI-Werkstatt · Quelltext und Didaktik-Material frei nutzbar für Unterricht und Fortbildung.
+  </footer>
+</div>
+
+<script src="assets/kompetenzen.js"></script>
+<script>
+  // Alle Stationen der Werkstatt. „pfad: null“ = geplant, noch nicht gebaut.
+  const STATIONEN = [
+    {
+      titel: "1 · LLM zum Anfassen",
+      beschreibung: "Text in Tokens zerlegen und live zusehen, wie ein Sprachmodell das nächste Wort würfelt — mit Temperatur-Regler.",
+      pfad: "stationen/llm-zum-anfassen/index.html",
+      haupt: ["K1"], neben: ["K2", "K4"],
+    },
+    {
+      titel: "2 · Baue deine eigene KI",
+      beschreibung: "Aus eigenen Texten einen Textgenerator trainieren und ihm ins „Gedächtnis“ schauen — das LLM-Prinzip ohne Blackbox.",
+      pfad: "stationen/eigene-ki/index.html",
+      haupt: ["K8", "K1"], neben: ["K2"],
+    },
+    {
+      titel: "3 · Trainingsdaten & Bias",
+      beschreibung: "Einen Bildklassifikator mit der Kamera trainieren und erleben, wie einseitige Daten zu unfairen Ergebnissen führen.",
+      pfad: null,
+      haupt: ["K2", "K6"], neben: ["K1"],
+    },
+    {
+      titel: "4 · Einem neuronalen Netz beim Lernen zusehen",
+      beschreibung: "Ziffern malen, ein kleines Netz live trainieren, Gewichte und Fehlerkurve beobachten.",
+      pfad: null,
+      haupt: ["K1"], neben: ["K8"],
+    },
+    {
+      titel: "5 · Das Prompt-Labyrinth",
+      beschreibung: "Eine KI bewacht ein Geheimnis: Level für Level bessere Prompts schreiben — und Schutzmaßnahmen austricksen lernen.",
+      pfad: null,
+      haupt: ["K3", "K5"], neben: ["K2"],
+    },
+    {
+      titel: "6 · Fakt oder KI?",
+      beschreibung: "Echte und KI-generierte Texte, Bilder und Quellen unterscheiden — mit Auflösung und Verifikationsstrategien.",
+      pfad: null,
+      haupt: ["K4"], neben: ["K2", "K6"],
+    },
+    {
+      titel: "7 · KI einsetzen — ja, nein, wie?",
+      beschreibung: "Szenario-Spiel: In Alltagssituationen entscheiden, ob KI das richtige Werkzeug ist — und wer die Verantwortung trägt.",
+      pfad: null,
+      haupt: ["K7"], neben: ["K5", "K6"],
+    },
+    {
+      titel: "8 · KI-Projekt-Canvas",
+      beschreibung: "Eine eigene KI-Lösung planen: Problem, Daten, Betroffene, Fairness — Ethik von Anfang an mitdenken.",
+      pfad: null,
+      haupt: ["K8", "K7"], neben: ["K6"],
+    },
+  ];
+
+  const liste = document.getElementById("stationsliste");
+  for (const s of STATIONEN) {
+    const li = document.createElement("li");
+    li.className = "karte station";
+    const h3 = document.createElement("h3");
+    if (s.pfad) {
+      const a = document.createElement("a");
+      a.href = s.pfad;
+      a.textContent = s.titel;
+      h3.appendChild(a);
+    } else {
+      h3.textContent = s.titel;
+    }
+    const p = document.createElement("p");
+    p.className = "beschreibung";
+    p.textContent = s.beschreibung;
+    const fuss = document.createElement("div");
+    fuss.className = "fusszeile";
+    const status = document.createElement("span");
+    status.className = "status " + (s.pfad ? "fertig" : "geplant");
+    status.textContent = s.pfad ? "✓ nutzbar" : "geplant";
+    fuss.appendChild(status);
+    zeigeKompetenzen(fuss, s.haupt, s.neben);
+    li.append(h3, p, fuss);
+    liste.appendChild(li);
+  }
+
+  // Legende: alle acht Cluster ausgeschrieben.
+  const legende = document.getElementById("kompetenzlegende");
+  for (const [id, k] of Object.entries(KOMPETENZEN)) {
+    const zeile = document.createElement("p");
+    const badge = document.createElement("strong");
+    badge.className = "kbadge haupt";
+    badge.style.background = `var(--${id.toLowerCase()})`;
+    badge.textContent = id;
+    zeile.append(badge, ` ${k.titel} — ${k.erklaerung} `);
+    const ref = document.createElement("span");
+    ref.className = "hinweis";
+    ref.textContent = `(${k.referenz})`;
+    zeile.appendChild(ref);
+    legende.appendChild(zeile);
+  }
+</script>
+</body>
 </html>

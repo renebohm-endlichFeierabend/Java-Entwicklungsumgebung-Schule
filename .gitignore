@@ -1,7 +1,2 @@
-node_modules/
-dist/
 *.log
 .DS_Store
-
-# Kompilierte Klassen des Java-Frameworks (Quelltext bleibt versioniert).
-java-framework/out/

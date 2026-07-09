@@ -1,0 +1,138 @@
+/* KI-Werkstatt — gemeinsames Layout aller Stationen.
+   Bewusst ohne Framework und ohne Build-Schritt: funktioniert auch
+   direkt von der Festplatte (file://). */
+
+:root {
+  --tinte: #1c2333;
+  --tinte-leise: #5a6478;
+  --papier: #f7f8fb;
+  --karte: #ffffff;
+  --linie: #dde2ec;
+  --akzent: #2456c8;
+  --akzent-hell: #e8eefb;
+  --gut: #1d7a4f;
+  --warnung: #a05a00;
+  /* Kompetenzcluster-Farben (K1–K8) */
+  --k1: #2456c8; --k2: #a04ad2; --k3: #0f7fa8; --k4: #c2452e;
+  --k5: #a05a00; --k6: #1d7a4f; --k7: #7a4f1d; --k8: #444fa8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tinte: #e7eaf2;
+    --tinte-leise: #9aa3b5;
+    --papier: #14181f;
+    --karte: #1d232d;
+    --linie: #333b49;
+    --akzent: #7ea4f2;
+    --akzent-hell: #24304a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--tinte);
+  background: var(--papier);
+  line-height: 1.55;
+}
+
+.umschlag { max-width: 60rem; margin: 0 auto; padding: 1rem 1.25rem 4rem; }
+
+header.kopf { padding: 1.5rem 0 0.5rem; }
+header.kopf .zurueck { font-size: 0.9rem; }
+h1 { font-size: 1.7rem; line-height: 1.25; margin: 0.3rem 0; }
+h2 { font-size: 1.25rem; margin-top: 2.2rem; }
+h3 { font-size: 1.05rem; }
+.untertitel { color: var(--tinte-leise); margin-top: 0; }
+
+a { color: var(--akzent); }
+
+.karte {
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+
+/* Stationsübersicht auf der Startseite */
+.stationen { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1rem; padding: 0; margin: 1.5rem 0; list-style: none; }
+.station { display: flex; flex-direction: column; gap: 0.5rem; }
+.station h3 { margin: 0; }
+.station .beschreibung { margin: 0; font-size: 0.95rem; color: var(--tinte-leise); flex: 1; }
+.station .fusszeile { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+.status { font-size: 0.78rem; padding: 0.1rem 0.55rem; border-radius: 99px; border: 1px solid var(--linie); color: var(--tinte-leise); }
+.status.fertig { color: var(--gut); border-color: currentColor; }
+.status.geplant { font-style: italic; }
+
+/* Kompetenz-Etiketten */
+.kompetenzen { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.4rem 0; padding: 0; list-style: none; }
+.kbadge {
+  font-size: 0.78rem; font-weight: 600;
+  padding: 0.1rem 0.55rem; border-radius: 99px;
+  color: #fff; cursor: help; opacity: 0.55;
+}
+.kbadge.haupt { opacity: 1; }
+
+/* Didaktik-Kasten */
+.didaktik { border-left: 5px solid var(--gut); }
+.didaktik h2, .didaktik h3 { margin-top: 0.2rem; }
+.didaktik summary { cursor: pointer; font-weight: 600; }
+
+/* Interaktive Elemente */
+textarea, input[type="text"] {
+  width: 100%; font: inherit; color: inherit;
+  background: var(--papier); border: 1px solid var(--linie);
+  border-radius: 8px; padding: 0.6rem;
+}
+textarea { min-height: 7rem; resize: vertical; }
+
+button {
+  font: inherit; font-weight: 600;
+  color: var(--akzent); background: var(--akzent-hell);
+  border: 1px solid var(--akzent); border-radius: 8px;
+  padding: 0.45rem 0.9rem; cursor: pointer;
+}
+button:hover { filter: brightness(1.05); }
+button.primaer { color: #fff; background: var(--akzent); }
+.knopfleiste { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.8rem 0; align-items: center; }
+
+label.regler { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; }
+
+/* Token-Chips */
+.tokenband { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.8rem 0; min-height: 2rem; }
+.token {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.95rem; padding: 0.15rem 0.45rem;
+  border-radius: 6px; border: 1px solid rgba(0,0,0,0.15);
+  white-space: pre; cursor: help;
+}
+
+/* Wahrscheinlichkeits-Balken */
+.balkenliste { display: flex; flex-direction: column; gap: 0.35rem; margin: 0.8rem 0; }
+.balkenzeile { display: grid; grid-template-columns: 8rem 1fr 4rem; gap: 0.6rem; align-items: center; }
+.balkenzeile .wort { font-family: ui-monospace, Consolas, monospace; text-align: right; overflow: hidden; text-overflow: ellipsis; }
+.balken { height: 1.25rem; border-radius: 5px; background: var(--akzent); min-width: 2px; transition: width 0.25s; }
+.balkenzeile button { padding: 0.05rem 0.5rem; font-weight: 400; }
+.balkenzeile .prozent { font-variant-numeric: tabular-nums; color: var(--tinte-leise); font-size: 0.9rem; }
+
+.ausgabetext {
+  background: var(--papier); border: 1px dashed var(--linie);
+  border-radius: 8px; padding: 0.8rem; min-height: 3.5rem;
+  font-size: 1.05rem;
+}
+.ausgabetext .cursorwort { background: var(--akzent-hell); border-radius: 4px; padding: 0 0.15rem; }
+
+.hinweis { font-size: 0.9rem; color: var(--tinte-leise); }
+.statistik { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 0.8rem 0; }
+.statistik .zahl { font-size: 1.5rem; font-weight: 700; display: block; }
+.statistik .label { font-size: 0.85rem; color: var(--tinte-leise); }
+
+table.gedaechtnis { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+table.gedaechtnis th, table.gedaechtnis td { border-bottom: 1px solid var(--linie); padding: 0.35rem 0.6rem; text-align: left; vertical-align: top; }
+table.gedaechtnis td.kontext { font-family: ui-monospace, Consolas, monospace; white-space: nowrap; }
+
+footer.fuss { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linie); font-size: 0.85rem; color: var(--tinte-leise); }
